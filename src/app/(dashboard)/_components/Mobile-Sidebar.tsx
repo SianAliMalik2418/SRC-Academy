@@ -5,10 +5,10 @@ import Sidebar from "./Sidebar";
 const MobileSidebar = () => {
   return (
     <Sheet>
-      <SheetTrigger className="md:hidden pr-4 hover:opacity-75 z-[100] ">
-        <Menu className="my-10 " />
+      <SheetTrigger className="z-[100] pr-4 hover:opacity-75 md:hidden">
+        <Menu className="my-10" />
       </SheetTrigger>
-      <SheetContent side={"left"} className="p-0 bg-background w-[90%] ">
+      <SheetContent side={"left"} className="bg-background w-[80%] p-0">
         <Sidebar />
       </SheetContent>
     </Sheet>

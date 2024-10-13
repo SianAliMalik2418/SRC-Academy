@@ -15,17 +15,15 @@ const NavbarRoutes = () => {
   return (
     <div className="flex gap-x-4">
       {isTeacherMode || isPlayerPage ? (
-        <Link href={"/"}>
-          <Button variant={"ghost"} size={"sm"}>
+        <Link href={"/"} className="rounded-xl">
+          <Button variant={"ghost"}>
             <LogOutIcon className="mr-1 text-sm" />
             Exit
           </Button>
         </Link>
       ) : (
-        <Link href={"/teacher/courses"}>
-          <Button variant={"ghost"} size={"sm"}>
-            Teacher Mode
-          </Button>
+        <Link href={"/teacher/courses"} className="rounded-xl">
+          <Button variant={"ghost"}>Teacher Mode</Button>
         </Link>
       )}
 

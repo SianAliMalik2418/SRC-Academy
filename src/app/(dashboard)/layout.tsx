@@ -3,15 +3,15 @@ import Sidebar from "./_components/Sidebar";
 
 const DasboardLayout = ({ children }: { children: React.ReactNode }) => {
   return (
-    <div className="h-full flex gap-5 py-10">
-      <div className="h-[80px] md:pl-50 fixed w-full z-50 inset-y-0">
+    <div className="flex h-full gap-5 py-10">
+      <div className="md:pl-50 fixed inset-y-0 z-50 h-[80px] w-full">
         <Navbar />
       </div>
 
-      <div className="hidden md:flex flex-col fixed w-56 h-full z-50">
+      <div className="fixed z-50 hidden h-full w-56 flex-col md:flex">
         <Sidebar />
       </div>
-      <main className="md:pl-60 h-full">{children}</main>
+      <main className="h-full pt-[47px] md:pl-56">{children}</main>
     </div>
   );
 };
