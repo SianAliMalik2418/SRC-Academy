@@ -2,10 +2,16 @@
 
 import { Button } from "@/components/ui/button";
 import ButtonLoading from "@/components/ui/buttonLoading";
-import { Form, FormControl, FormField } from "@/components/ui/form";
-import { Textarea } from "@/components/ui/textarea";
-import { courseDescriptionSchema } from "@/schemas/schemas";
-import { CourseModelType } from "@/types/types";
+import { Checkbox } from "@/components/ui/checkbox";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+} from "@/components/ui/form";
+import { ChapterAcessSchema } from "@/schemas/schemas";
+import { Chapter } from "@/types/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import { Pencil } from "lucide-react";
@@ -15,17 +21,19 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import * as z from "zod";
 
-const CourseDescriptionForm = ({
+const ChapterAcessForm = ({
   initialData,
+  courseId,
 }: {
-  initialData: CourseModelType;
+  initialData: Chapter;
+  courseId: string;
 }) => {
   const [isEditing, setIsEditing] = useState(false);
 
-  const form = useForm<z.infer<typeof courseDescriptionSchema>>({
-    resolver: zodResolver(courseDescriptionSchema),
+  const form = useForm<z.infer<typeof ChapterAcessSchema>>({
+    resolver: zodResolver(ChapterAcessSchema),
     defaultValues: {
-      description: initialData.description,
+      isFree: !!initialData.isFree,
     },
   });
 
@@ -33,17 +41,17 @@ const CourseDescriptionForm = ({
 
   const router = useRouter();
 
-  const updateDescriptionSubmit = async (
-    values: z.infer<typeof courseDescriptionSchema>,
+  const updateChapterAccessSubmit = async (
+    values: z.infer<typeof ChapterAcessSchema>,
   ) => {
     try {
       console.log(values);
       const response = await axios.patch(
-        `/api/courses/${initialData._id}`,
+        `/api/courses/${courseId}/chapter/${initialData._id}`,
         values,
       );
 
-      toast.success("Description updated!");
+      toast.success("Chapter Access Status updated!");
       toggleEditing();
       router.refresh();
       console.log(response);
@@ -58,7 +66,7 @@ const CourseDescriptionForm = ({
   return (
     <div className="flex flex-col gap-3 rounded-md bg-slate-900 p-4">
       <div className="flex items-center justify-between text-sm">
-        <h1 className="text-base font-medium md:text-lg">Course Description</h1>
+        <h1 className="text-base font-medium md:text-lg">Chapter Access</h1>
         <Button
           onClick={toggleEditing}
           variant={"ghost"}
@@ -69,7 +77,7 @@ const CourseDescriptionForm = ({
           ) : (
             <>
               <Pencil className="h-4 w-4" />
-              Edit Description
+              Edit Access
             </>
           )}
         </Button>
@@ -77,29 +85,31 @@ const CourseDescriptionForm = ({
 
       {isEditing ? (
         <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(updateDescriptionSubmit)}
-            className="space-y-3"
-          >
+          <form onSubmit={form.handleSubmit(updateChapterAccessSubmit)}>
             <FormField
-              name="description"
               control={form.control}
+              name="isFree"
               render={({ field }) => (
-                <FormControl>
-                  <Textarea
-                    disabled={isSubmitting}
-                    placeholder="eg, 'This course is about...'"
-                    minLength={1}
-                    {...field}
-                  />
-                </FormControl>
+                <FormItem className="flex flex-row items-center gap-2 rounded-md border p-4 shadow">
+                  <FormControl>
+                    <Checkbox
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+
+                  <FormDescription>
+                    Check this if you want this chapter to be available for
+                    free.
+                  </FormDescription>
+                </FormItem>
               )}
             />
-
             <ButtonLoading
               isLoading={isSubmitting}
               disabled={!isValid || isSubmitting}
               type="submit"
+              className="mt-4"
             >
               Save
             </ButtonLoading>
@@ -107,11 +117,13 @@ const CourseDescriptionForm = ({
         </Form>
       ) : (
         <span className="text-sm">
-          {initialData.description ? (
-            <>{initialData.description}</>
+          {initialData.isFree ? (
+            <p className="text-sm italic text-muted">
+              This chapter is free for access.{" "}
+            </p>
           ) : (
             <span className="mt-2 text-sm italic text-secondary-foreground">
-              No description...
+              This chapter is not free to access.
             </span>
           )}
         </span>
@@ -120,4 +132,4 @@ const CourseDescriptionForm = ({
   );
 };
 
-export default CourseDescriptionForm;
+export default ChapterAcessForm;

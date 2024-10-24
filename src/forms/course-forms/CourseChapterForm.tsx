@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import ButtonLoading from "@/components/ui/buttonLoading";
 import { Form, FormControl, FormField } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { courseChapterSchema } from "@/schemas/schemas";
+import { ChapterSchema } from "@/schemas/schemas";
 import { CourseModelType } from "@/types/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
@@ -25,8 +25,8 @@ const CourseChapterForm = ({
   const [isCreatingChapter, setIsCreatingChapter] = useState(false);
   const [isUpdatingChapterOrder, setIsUpdatingChapterOrder] = useState(false);
 
-  const form = useForm<z.infer<typeof courseChapterSchema>>({
-    resolver: zodResolver(courseChapterSchema),
+  const form = useForm<z.infer<typeof ChapterSchema>>({
+    resolver: zodResolver(ChapterSchema),
     defaultValues: {
       chapterTitle: "",
     },
@@ -36,9 +36,7 @@ const CourseChapterForm = ({
 
   const router = useRouter();
 
-  const createChapterSubmit = async (
-    values: z.infer<typeof courseChapterSchema>,
-  ) => {
+  const createChapterSubmit = async (values: z.infer<typeof ChapterSchema>) => {
     try {
       const response = await axios.post(
         `/api/courses/${initialData._id}/chapter`,

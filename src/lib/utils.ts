@@ -10,6 +10,7 @@ export const COURSE_CATEGORIES = [
     value: "Computer Science",
     label: "Computer Science",
   },
+
   {
     value: "Physics",
     label: "Physics",
@@ -33,5 +34,9 @@ export const COURSE_CATEGORIES = [
   {
     value: "Filming",
     label: "Filming",
+  },
+  {
+    value: "Other Education field..",
+    label: "Other Education field..",
   },
 ];

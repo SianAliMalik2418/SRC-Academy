@@ -2,31 +2,38 @@
 
 import FileUpload from "@/components/File-Upload";
 import { Button } from "@/components/ui/button";
-import { courseImageSchema } from "@/schemas/schemas";
-import { CourseModelType } from "@/types/types";
+import { ChapterVideoSchema } from "@/schemas/schemas";
+import { Chapter } from "@/types/types";
 import axios from "axios";
-import { ImageIcon, Pencil, PlusCircleIcon } from "lucide-react";
-import Image from "next/image";
+import { Pencil, PlusCircleIcon, Video } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 import * as z from "zod";
 
-const CourseImageForm = ({ initialData }: { initialData: CourseModelType }) => {
+import MuxPlayer from "@mux/mux-player-react";
+
+const ChapterVideoForm = ({
+  initialData,
+  courseId,
+}: {
+  initialData: Chapter;
+  courseId: string;
+}) => {
   const [isEditing, setIsEditing] = useState(false);
 
   const router = useRouter();
 
   const handleImageUpload = async (
-    values: z.infer<typeof courseImageSchema>,
+    values: z.infer<typeof ChapterVideoSchema>,
   ) => {
     try {
       const response = await axios.patch(
-        `/api/courses/${initialData._id}`,
+        `/api/courses/${courseId}/chapter/${initialData._id}`,
         values,
       );
 
-      toast.success("Image uploaded!");
+      toast.success("Video uploaded!");
       toggleEditing();
       router.refresh();
       console.log(response);
@@ -39,9 +46,9 @@ const CourseImageForm = ({ initialData }: { initialData: CourseModelType }) => {
   const toggleEditing = () => setIsEditing((prev) => !prev);
 
   return (
-    <div className="flex flex-col gap-3 p-4">
+    <div className="flex h-full flex-col gap-3 p-4">
       <div className="flex items-center justify-between text-sm">
-        <h1 className="text-lg font-medium">Course Image</h1>
+        <h1 className="text-lg font-medium">Chapter Video</h1>
         <Button
           onClick={toggleEditing}
           variant={"ghost"}
@@ -49,52 +56,47 @@ const CourseImageForm = ({ initialData }: { initialData: CourseModelType }) => {
         >
           {isEditing && <>Cancel</>}
 
-          {!isEditing && !initialData.imageUrl && (
+          {!isEditing && !initialData.videoUrl && (
             <>
               <PlusCircleIcon className="h-4 w-4" />
-              Add an Image
+              Add a Video
             </>
           )}
 
-          {!isEditing && initialData.imageUrl && (
+          {!isEditing && initialData.videoUrl && (
             <>
               <Pencil className="mr-2 h-4 w-4" />
-              Update Image
+              Update Video
             </>
           )}
         </Button>
       </div>
 
       {!isEditing &&
-        (!initialData.imageUrl ? (
-          <div className="flex h-40 w-full items-center justify-center">
-            <ImageIcon className="h-10 w-10" />
+        (!initialData.videoUrl ? (
+          <div
+            style={{ height: "400px;", backgroundColor: "gray" }}
+            className="h-[400px]rounded flex w-full items-center justify-center rounded-md"
+          >
+            <Video className="h-10 w-10" />
           </div>
         ) : (
-          <div className="">
-            <Image
-              alt="Course Image"
-              width={500}
-              height={300}
-              className="rounded-md object-cover"
-              src={initialData.imageUrl}
-            />
-          </div>
+          <MuxPlayer playbackId={initialData.muxData?.playbackId || ""} />
         ))}
 
       {isEditing && (
         <div>
           <FileUpload
-            endpoint="courseImage"
+            endpoint="chapterVideo"
             onChange={(url) => {
               if (url) {
-                handleImageUpload({ imageUrl: url });
+                handleImageUpload({ videoUrl: url });
               }
             }}
           />
 
           <div className="text-xs italic text-secondary-foreground">
-            16:9 aspect ratio recommended
+            Upload this chapter&apos;s video
           </div>
         </div>
       )}
@@ -102,4 +104,4 @@ const CourseImageForm = ({ initialData }: { initialData: CourseModelType }) => {
   );
 };
 
-export default CourseImageForm;
+export default ChapterVideoForm;

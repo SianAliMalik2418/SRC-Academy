@@ -1,13 +1,13 @@
 import { IconBadge } from "@/components/Icon-Badge";
 import { connectDB } from "@/db/dbconfig";
 import { CourseModel } from "@/db/models/CourseModel";
-import CourseAttachmentForm from "@/forms/CourseAttachmentForm";
-import CourseCategoryForm from "@/forms/CourseCategoryForm";
-import CourseChapterForm from "@/forms/CourseChapterForm";
-import CourseDescriptionForm from "@/forms/CourseDescriptionForm";
-import CourseImageForm from "@/forms/CourseImageForm";
-import CoursePriceForm from "@/forms/CoursePriceForm";
-import CourseTitleForm from "@/forms/CourseTitleForm";
+import CourseAttachmentForm from "@/forms/course-forms/CourseAttachmentForm";
+import CourseCategoryForm from "@/forms/course-forms/CourseCategoryForm";
+import CourseChapterForm from "@/forms/course-forms/CourseChapterForm";
+import CourseDescriptionForm from "@/forms/course-forms/CourseDescriptionForm";
+import CourseImageForm from "@/forms/course-forms/CourseImageForm";
+import CoursePriceForm from "@/forms/course-forms/CoursePriceForm";
+import CourseTitleForm from "@/forms/course-forms/CourseTitleForm";
 import { CourseModelType } from "@/types/types";
 import { auth } from "@clerk/nextjs/server";
 import {

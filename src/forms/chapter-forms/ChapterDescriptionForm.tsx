@@ -2,11 +2,10 @@
 
 import { Button } from "@/components/ui/button";
 import ButtonLoading from "@/components/ui/buttonLoading";
-import { ComboBox } from "@/components/ui/combobox";
 import { Form, FormControl, FormField } from "@/components/ui/form";
-import { COURSE_CATEGORIES } from "@/lib/utils";
-import { courseCategorySchema } from "@/schemas/schemas";
-import { CourseModelType } from "@/types/types";
+import { Textarea } from "@/components/ui/textarea";
+import { DescriptionSchema } from "@/schemas/schemas";
+import { Chapter } from "@/types/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import { Pencil } from "lucide-react";
@@ -16,35 +15,37 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import * as z from "zod";
 
-const CourseCategoryForm = ({
+const ChapterDescriptionForm = ({
   initialData,
+  courseId,
 }: {
-  initialData: CourseModelType;
+  initialData: Chapter;
+  courseId: string;
 }) => {
   const [isEditing, setIsEditing] = useState(false);
 
-  const form = useForm<z.infer<typeof courseCategorySchema>>({
-    resolver: zodResolver(courseCategorySchema),
+  const form = useForm<z.infer<typeof DescriptionSchema>>({
+    resolver: zodResolver(DescriptionSchema),
     defaultValues: {
-      category: initialData.category,
+      description: initialData.description,
     },
   });
 
-  const { isSubmitting } = form.formState;
+  const { isSubmitting, isValid } = form.formState;
 
   const router = useRouter();
 
-  const updateCategorySubmit = async (
-    values: z.infer<typeof courseCategorySchema>,
+  const updateDescriptionSubmit = async (
+    values: z.infer<typeof DescriptionSchema>,
   ) => {
     try {
       console.log(values);
       const response = await axios.patch(
-        `/api/courses/${initialData._id}`,
+        `/api/courses/${courseId}/chapter/${initialData._id}`,
         values,
       );
 
-      toast.success("Category updated!");
+      toast.success("Description updated!");
       toggleEditing();
       router.refresh();
       console.log(response);
@@ -59,18 +60,20 @@ const CourseCategoryForm = ({
   return (
     <div className="flex flex-col gap-3 rounded-md bg-slate-900 p-4">
       <div className="flex items-center justify-between text-sm">
-        <h1 className="text-lg font-medium">Course Category</h1>
+        <h1 className="text-base font-medium md:text-lg">
+          Chapter Description
+        </h1>
         <Button
           onClick={toggleEditing}
           variant={"ghost"}
-          className="mr-2 flex items-center gap-2"
+          className="flex items-center gap-2"
         >
           {isEditing ? (
             <>Cancel</>
           ) : (
             <>
               <Pencil className="h-4 w-4" />
-              Edit Category
+              Edit Description
             </>
           )}
         </Button>
@@ -79,35 +82,40 @@ const CourseCategoryForm = ({
       {isEditing ? (
         <Form {...form}>
           <form
-            onSubmit={form.handleSubmit(updateCategorySubmit)}
+            onSubmit={form.handleSubmit(updateDescriptionSubmit)}
             className="space-y-3"
           >
             <FormField
-              name="category"
+              name="description"
               control={form.control}
               render={({ field }) => (
                 <FormControl>
-                  <ComboBox
-                    options={COURSE_CATEGORIES}
-                    value={field.value}
-                    onChange={field.onChange}
+                  <Textarea
+                    disabled={isSubmitting}
+                    placeholder="eg, 'This chapter is about...'"
+                    minLength={1}
+                    {...field}
                   />
                 </FormControl>
               )}
             />
 
-            <ButtonLoading isLoading={isSubmitting} type="submit">
+            <ButtonLoading
+              isLoading={isSubmitting}
+              disabled={!isValid || isSubmitting}
+              type="submit"
+            >
               Save
             </ButtonLoading>
           </form>
         </Form>
       ) : (
         <span className="text-sm">
-          {initialData.category ? (
-            <>{initialData.category}</>
+          {initialData.description ? (
+            <>{initialData.description}</>
           ) : (
             <span className="mt-2 text-sm italic text-secondary-foreground">
-              No category defined yet...
+              No description...
             </span>
           )}
         </span>
@@ -116,4 +124,4 @@ const CourseCategoryForm = ({
   );
 };
 
-export default CourseCategoryForm;
+export default ChapterDescriptionForm;

@@ -4,8 +4,7 @@ import { Button } from "@/components/ui/button";
 import ButtonLoading from "@/components/ui/buttonLoading";
 import { Form, FormControl, FormField } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { formatPrice } from "@/lib/format";
-import { coursePriceSchema } from "@/schemas/schemas";
+import { TitleSchema } from "@/schemas/schemas";
 import { CourseModelType } from "@/types/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
@@ -16,13 +15,13 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import * as z from "zod";
 
-const CoursePriceForm = ({ initialData }: { initialData: CourseModelType }) => {
+const CourseTitleForm = ({ initialData }: { initialData: CourseModelType }) => {
   const [isEditing, setIsEditing] = useState(false);
 
-  const form = useForm<z.infer<typeof coursePriceSchema>>({
-    resolver: zodResolver(coursePriceSchema),
+  const form = useForm<z.infer<typeof TitleSchema>>({
+    resolver: zodResolver(TitleSchema),
     defaultValues: {
-      price: initialData.price,
+      title: initialData.title,
     },
   });
 
@@ -30,16 +29,14 @@ const CoursePriceForm = ({ initialData }: { initialData: CourseModelType }) => {
 
   const router = useRouter();
 
-  const updatePriceSubmit = async (
-    values: z.infer<typeof coursePriceSchema>,
-  ) => {
+  const updateTitleSubmit = async (values: z.infer<typeof TitleSchema>) => {
     try {
       const response = await axios.patch(
         `/api/courses/${initialData._id}`,
         values,
       );
 
-      toast.success("Course Price updated!");
+      toast.success("Title updated!");
       router.refresh();
       toggleEditing();
 
@@ -55,7 +52,7 @@ const CoursePriceForm = ({ initialData }: { initialData: CourseModelType }) => {
   return (
     <div className="flex flex-col gap-3 rounded-md bg-slate-900 p-4">
       <div className="flex items-center justify-between text-sm">
-        <h1 className="text-lg font-medium">Course Price</h1>
+        <h1 className="text-lg font-medium">Course Title</h1>
         <Button
           onClick={toggleEditing}
           variant={"ghost"}
@@ -66,7 +63,7 @@ const CoursePriceForm = ({ initialData }: { initialData: CourseModelType }) => {
           ) : (
             <>
               <Pencil className="h-4 w-4" />
-              Edit Price
+              Edit Title
             </>
           )}
         </Button>
@@ -75,20 +72,18 @@ const CoursePriceForm = ({ initialData }: { initialData: CourseModelType }) => {
       {isEditing ? (
         <Form {...form}>
           <form
-            onSubmit={form.handleSubmit(updatePriceSubmit)}
+            onSubmit={form.handleSubmit(updateTitleSubmit)}
             className="space-y-3"
           >
             <FormField
-              name="price"
+              name="title"
               control={form.control}
               render={({ field }) => (
                 <FormControl>
                   <Input
-                    defaultValue={initialData.price}
-                    step={"5"}
+                    defaultValue={initialData.title}
                     disabled={isSubmitting}
-                    placeholder="eg, '$88'"
-                    type="number"
+                    placeholder="eg, 'Advance Web Development'"
                     {...field}
                   />
                 </FormControl>
@@ -105,18 +100,10 @@ const CoursePriceForm = ({ initialData }: { initialData: CourseModelType }) => {
           </form>
         </Form>
       ) : (
-        <span className="text-sm">
-          {initialData.price ? (
-            <>{formatPrice(initialData.price)}</>
-          ) : (
-            <span className="mt-2 text-sm italic text-secondary-foreground">
-              Price not set yet...
-            </span>
-          )}
-        </span>
+        <span className="text-sm">{initialData.title}</span>
       )}
     </div>
   );
 };
 
-export default CoursePriceForm;
+export default CourseTitleForm;

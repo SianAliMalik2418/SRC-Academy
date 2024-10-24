@@ -4,8 +4,8 @@ import { Button } from "@/components/ui/button";
 import ButtonLoading from "@/components/ui/buttonLoading";
 import { Form, FormControl, FormField } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { courseTitleSchema } from "@/schemas/schemas";
-import { CourseModelType } from "@/types/types";
+import { ChapterTitleSchema } from "@/schemas/schemas";
+import { Chapter } from "@/types/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import { Pencil } from "lucide-react";
@@ -15,13 +15,19 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import * as z from "zod";
 
-const CourseTitleForm = ({ initialData }: { initialData: CourseModelType }) => {
+const ChapterTitleForm = ({
+  initialData,
+  courseId,
+}: {
+  initialData: Chapter;
+  courseId: string;
+}) => {
   const [isEditing, setIsEditing] = useState(false);
 
-  const form = useForm<z.infer<typeof courseTitleSchema>>({
-    resolver: zodResolver(courseTitleSchema),
+  const form = useForm<z.infer<typeof ChapterTitleSchema>>({
+    resolver: zodResolver(ChapterTitleSchema),
     defaultValues: {
-      title: initialData.title,
+      chapterTitle: initialData.chapterTitle,
     },
   });
 
@@ -30,11 +36,11 @@ const CourseTitleForm = ({ initialData }: { initialData: CourseModelType }) => {
   const router = useRouter();
 
   const updateTitleSubmit = async (
-    values: z.infer<typeof courseTitleSchema>,
+    values: z.infer<typeof ChapterTitleSchema>,
   ) => {
     try {
       const response = await axios.patch(
-        `/api/courses/${initialData._id}`,
+        `/api/courses/${courseId}/chapter/${initialData._id}`,
         values,
       );
 
@@ -54,7 +60,7 @@ const CourseTitleForm = ({ initialData }: { initialData: CourseModelType }) => {
   return (
     <div className="flex flex-col gap-3 rounded-md bg-slate-900 p-4">
       <div className="flex items-center justify-between text-sm">
-        <h1 className="text-lg font-medium">Course Title</h1>
+        <h1 className="text-lg font-medium">Chapter Title</h1>
         <Button
           onClick={toggleEditing}
           variant={"ghost"}
@@ -78,12 +84,12 @@ const CourseTitleForm = ({ initialData }: { initialData: CourseModelType }) => {
             className="space-y-3"
           >
             <FormField
-              name="title"
+              name="chapterTitle"
               control={form.control}
               render={({ field }) => (
                 <FormControl>
                   <Input
-                    defaultValue={initialData.title}
+                    defaultValue={initialData.chapterTitle}
                     disabled={isSubmitting}
                     placeholder="eg, 'Advance Web Development'"
                     {...field}
@@ -102,10 +108,10 @@ const CourseTitleForm = ({ initialData }: { initialData: CourseModelType }) => {
           </form>
         </Form>
       ) : (
-        <span className="text-sm">{initialData.title}</span>
+        <span className="text-sm">{initialData.chapterTitle}</span>
       )}
     </div>
   );
 };
 
-export default CourseTitleForm;
+export default ChapterTitleForm;

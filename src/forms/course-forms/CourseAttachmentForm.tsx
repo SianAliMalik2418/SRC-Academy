@@ -2,7 +2,7 @@
 
 import FileUpload from "@/components/File-Upload";
 import { Button } from "@/components/ui/button";
-import { courseAttachmentSchema } from "@/schemas/schemas";
+import { AttachmentSchema } from "@/schemas/schemas";
 import { CourseModelType } from "@/types/types";
 import axios from "axios";
 import { File, Loader2, PlusCircleIcon, X } from "lucide-react";
@@ -24,7 +24,7 @@ const CourseAttachmentForm = ({
   const router = useRouter();
 
   const handleAttachmentUpload = async (
-    attachmentUrl: z.infer<typeof courseAttachmentSchema>,
+    attachmentUrl: z.infer<typeof AttachmentSchema>,
   ) => {
     try {
       console.log(attachmentUrl);

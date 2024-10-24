@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import ButtonLoading from "@/components/ui/buttonLoading";
 import { Form, FormField, FormItem, FormLabel } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { courseTitleSchema } from "@/schemas/schemas";
+import { TitleSchema } from "@/schemas/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import { useRouter } from "next/navigation";
@@ -15,8 +15,8 @@ import * as z from "zod";
 const TeacherPage = () => {
   const router = useRouter();
 
-  const form = useForm<z.infer<typeof courseTitleSchema>>({
-    resolver: zodResolver(courseTitleSchema),
+  const form = useForm<z.infer<typeof TitleSchema>>({
+    resolver: zodResolver(TitleSchema),
     defaultValues: {
       title: "",
     },
@@ -24,7 +24,7 @@ const TeacherPage = () => {
 
   const { isSubmitting, isValid } = form.formState;
 
-  const onSubmit = async (values: z.infer<typeof courseTitleSchema>) => {
+  const onSubmit = async (values: z.infer<typeof TitleSchema>) => {
     try {
       const response = await axios.post("/api/courses", values);
       console.log(response);
