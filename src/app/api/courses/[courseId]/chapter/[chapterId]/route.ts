@@ -147,3 +147,55 @@ export const PATCH = async (
     );
   }
 };
+
+export const DELETE = async (
+  request: Request,
+  { params }: { params: { chapterId: string; courseId: string } },
+) => {
+  const { chapterId, courseId } = params;
+
+  try {
+    await connectDB();
+
+    const { userId } = auth();
+    if (!userId) {
+      return NextResponse.json(
+        { success: false, message: "User not authorized to delete chapter" },
+        { status: 401 },
+      );
+    }
+
+    const course = await CourseModel.findOne({
+      _id: courseId,
+      userId: userId,
+      "chapters._id": chapterId,
+    });
+
+    if (!course) {
+      return NextResponse.json(
+        { success: false, message: "Course or chapter not found" },
+        { status: 404 },
+      );
+    }
+
+    course.chapters = course.chapters.filter(
+      (chapter: Chapter) => chapter._id.toString() !== chapterId,
+    );
+
+    await course.save();
+
+    return NextResponse.json(
+      { success: true, message: "Chapter deleted successfully" },
+      { status: 200 },
+    );
+  } catch (error) {
+    console.error("DELETE handler error:", error);
+    return NextResponse.json(
+      {
+        success: false,
+        message: "Something went wrong while deleting the chapter",
+      },
+      { status: 500 },
+    );
+  }
+};

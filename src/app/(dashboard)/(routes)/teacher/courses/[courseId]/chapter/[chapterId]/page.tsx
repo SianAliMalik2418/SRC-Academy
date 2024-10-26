@@ -11,6 +11,8 @@ import ChapterTitleForm from "@/forms/chapter-forms/ChapterTitleForm";
 import ChapterDescriptionForm from "@/forms/chapter-forms/ChapterDescriptionForm";
 import ChapterAcessForm from "@/forms/chapter-forms/ChapterAcessForm";
 import ChapterVideoForm from "@/forms/chapter-forms/ChapterVideoForm";
+import Banner from "@/components/ui/banner";
+import ChapterActions from "@/components/Chapter-Actions";
 
 const SingleChapterPage = async ({
   params,
@@ -45,87 +47,80 @@ const SingleChapterPage = async ({
   const completedFields = requiredFields.filter(Boolean).length;
   const completionText = `(${completedFields}/${totalFields})`;
 
+  const isRequiredFieldsCompleted = requiredFields.every(Boolean);
+
   return (
-    <div className="flex w-screen flex-col gap-2 overflow-hidden p-6 md:ml-2 md:w-[80vw]">
-      <Button variant={"ghost"} className="w-fit p-0 px-1">
-        <Link
-          href={`/teacher/courses/${courseId}`}
-          className="flex items-center gap-3"
-        >
-          <ArrowLeft className="md:size-4" />
-          <span className="text-sm md:text-base">Back to course setup.</span>
-        </Link>
-      </Button>
+    <>
+      {!chapter.isPublished && (
+        <Banner
+          variant={"warning"}
+          label="This chapter is unpublished, It will not be visible in the course."
+        />
+      )}
 
-      <h1 className="mt-10 text-2xl font-semibold md:mt-7">Chapter Creation</h1>
-      <span className="text-xs text-muted-foreground">
-        Complete all fields {completionText}
-      </span>
+      <div className="flex w-screen flex-col gap-2 overflow-hidden p-6 md:ml-2 md:w-[80vw]">
+        <Button variant={"ghost"} className="w-fit p-0 px-1">
+          <Link
+            href={`/teacher/courses/${courseId}`}
+            className="flex items-center gap-3"
+          >
+            <ArrowLeft className="md:size-4" />
+            <span className="text-sm md:text-base">Back to course setup.</span>
+          </Link>
+        </Button>
 
-      <div className="mt-12 flex flex-col gap-14 md:flex-row">
-        {/* 1 row */}
-        <div className="flex flex-1 flex-col gap-6">
-          <div className="flex items-center gap-2">
-            <IconBadge icon={LayoutDashboard} />
-            <h1 className="text-xl font-normal">Customize your chapter</h1>
+        <div className="flex w-full items-center justify-between px-2">
+          <div className="flex flex-col gap-2">
+            <h1 className="mt-10 text-2xl font-semibold md:mt-7">
+              Chapter Creation
+            </h1>
+            <span className="text-xs text-muted-foreground">
+              Complete all fields {completionText}
+            </span>
           </div>
-
-          <ChapterTitleForm initialData={chapterData} courseId={courseId} />
-          <ChapterDescriptionForm
-            initialData={chapterData}
+          <ChapterActions
+            disabled={!isRequiredFieldsCompleted}
+            isPublished={chapter.isPublished!}
             courseId={courseId}
+            chapterId={chapterId}
           />
-
-          <div className="mt-7 flex items-center gap-2">
-            <IconBadge icon={Eye} />
-            <h1 className="text-xl font-normal">Access Settings</h1>
-          </div>
-          <ChapterAcessForm initialData={chapterData} courseId={courseId} />
         </div>
 
-        {/*  />
-          <div className="min-h-72 w-full rounded-md bg-slate-900">
-            <CourseImageForm initialData={courseData} />
-          </div>
-          <CourseCategoryForm initialData={courseData} />
-        </div> */}
+        <div className="mt-12 flex flex-col gap-14 md:flex-row">
+          {/* 1 row */}
+          <div className="flex flex-1 flex-col gap-6">
+            <div className="flex items-center gap-2">
+              <IconBadge icon={LayoutDashboard} />
+              <h1 className="text-xl font-normal">Customize your chapter</h1>
+            </div>
 
-        {/* 2 row */}
+            <ChapterTitleForm initialData={chapterData} courseId={courseId} />
+            <ChapterDescriptionForm
+              initialData={chapterData}
+              courseId={courseId}
+            />
 
-        <div className="flex h-full flex-1 flex-col gap-6">
-          <div className="flex items-center gap-2">
-            <IconBadge icon={Video} />
-            <h1 className="text-xl font-normal">Add a Video</h1>
+            <div className="mt-7 flex items-center gap-2">
+              <IconBadge icon={Eye} />
+              <h1 className="text-xl font-normal">Access Settings</h1>
+            </div>
+            <ChapterAcessForm initialData={chapterData} courseId={courseId} />
           </div>
-          <div className="min-h-72 rounded-md bg-slate-900">
-            <ChapterVideoForm initialData={chapterData} courseId={courseId} />
+
+          {/* 2 row */}
+
+          <div className="flex h-full flex-1 flex-col gap-6">
+            <div className="flex items-center gap-2">
+              <IconBadge icon={Video} />
+              <h1 className="text-xl font-normal">Add a Video</h1>
+            </div>
+            <div className="min-h-72 rounded-md bg-slate-900">
+              <ChapterVideoForm initialData={chapterData} courseId={courseId} />
+            </div>
           </div>
         </div>
-
-        {/* */}
-
-        {/* Price Section */}
-        {/* <div className="mt-5 flex flex-col space-y-7">
-            <div className="flex items-center gap-2">
-              <IconBadge icon={CircleDollarSign} />
-              <h1 className="text-xl font-normal">Sell your Course</h1>
-            </div>
-
-            <CoursePriceForm initialData={courseData} />
-          </div> */}
-
-        {/* Attachment Section */}
-
-        {/* <div className="mt-5 flex flex-col space-y-7">
-            <div className="flex items-center gap-2">
-              <IconBadge icon={File} />
-              <h1 className="text-xl font-normal">Resources and Attachments</h1>
-            </div>
-
-            <CourseAttachmentForm initialData={courseData} />
-          </div> */}
       </div>
-    </div>
+    </>
   );
 };
 

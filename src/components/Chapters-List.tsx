@@ -89,13 +89,15 @@ const ChaptersList = ({ items, onEdit, onReorder }: ChaptersListProps) => {
                     >
                       <Grip className="h-5 w-5" />
                     </div>
-                    <h1 className="font-">{chapter.chapterTitle}</h1>
+                    <h1 className="font-semibold">{chapter.chapterTitle}</h1>
 
-                    <div className="ml-auto flex items-center gap-x-2 pr-2">
-                      {chapter.isFree && <Badge>Free</Badge>}
+                    <div className="ml-auto flex items-center gap-x-2 p-4">
+                      {chapter.isFree && (
+                        <Badge className="border border-slate-600">Free</Badge>
+                      )}
                       <Badge
                         className={cn(
-                          "bg-slate-500 text-white",
+                          "border border-slate-800 bg-slate-500 text-white",
                           chapter.isPublished && "cursor-default bg-sky-700",
                         )}
                       >

@@ -76,12 +76,17 @@ const ChapterVideoForm = ({
         (!initialData.videoUrl ? (
           <div
             style={{ height: "400px;", backgroundColor: "gray" }}
-            className="h-[400px]rounded flex w-full items-center justify-center rounded-md"
+            className="flex w-full items-center justify-center rounded-md"
           >
             <Video className="h-10 w-10" />
           </div>
         ) : (
-          <MuxPlayer playbackId={initialData.muxData?.playbackId || ""} />
+          <>
+            <MuxPlayer playbackId={initialData.muxData?.playbackId || ""} />
+            <span className="mt-5 text-xs italic text-secondary-foreground">
+              Video might take some time to process, please wait..
+            </span>
+          </>
         ))}
 
       {isEditing && (
