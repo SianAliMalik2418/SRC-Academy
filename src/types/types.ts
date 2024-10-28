@@ -24,7 +24,7 @@ export type CourseModelType = {
 
   userId: string;
 
-  category: string;
+  category?: string;
 
   imageUrl?: string;
 
@@ -35,7 +35,7 @@ export type CourseModelType = {
   createdAt: Date;
   updatedAt: Date;
 
-  attachments: {
+  attachments?: {
     attachmentName: string;
     attachmentUrl: string;
   }[];

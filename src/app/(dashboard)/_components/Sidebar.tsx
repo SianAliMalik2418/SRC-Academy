@@ -6,8 +6,8 @@ const Sidebar = ({ className }: { className?: string }) => {
   return (
     <div
       className={cn(
-        "bg-background py-10 md:border-r gap-10 w-56 flex flex-col shadow-sm h-full z-50 fixed inset-y-0",
-        className
+        "inset-y-0 z-50 flex h-full w-full flex-col gap-10 py-10 shadow-sm md:fixed md:w-56 md:border-r",
+        className,
       )}
     >
       <Logo />

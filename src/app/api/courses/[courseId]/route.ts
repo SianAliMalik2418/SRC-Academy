@@ -57,10 +57,6 @@ export const DELETE = async (
 
     const { userId } = auth();
 
-    const values = await request.json();
-
-    console.log(values);
-
     if (!userId) {
       return NextResponse.json(
         { success: false, message: "User not authorized to delete course" },

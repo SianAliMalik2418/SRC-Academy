@@ -97,8 +97,8 @@ const ChaptersList = ({ items, onEdit, onReorder }: ChaptersListProps) => {
                       )}
                       <Badge
                         className={cn(
-                          "border border-slate-800 bg-slate-500 text-white",
-                          chapter.isPublished && "cursor-default bg-sky-700",
+                          "cursor-default border border-slate-800 bg-slate-500 text-white",
+                          chapter.isPublished && "bg-sky-700",
                         )}
                       >
                         {chapter.isPublished ? "Published" : "Draft"}
